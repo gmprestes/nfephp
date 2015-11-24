@@ -4,7 +4,7 @@ namespace NFePHP\Common\Base;
 
 /**
  * Classe base das classes principais para a comunicação com a SEFAZ
- * 
+ *
  * @category   NFePHP
  * @package    NFePHP\Common\Base
  * @copyright  Copyright (c) 2008-2015
@@ -47,7 +47,7 @@ class BaseTools
     /**
      * motivoContingencia
      * Motivo por ter entrado em Contingencia
-     * @var string 
+     * @var string
      */
     public $motivoContingencia = '';
     /**
@@ -59,7 +59,7 @@ class BaseTools
     /**
      * verAplic
      * Versão da aplicação
-     * @var string 
+     * @var string
      */
     public $verAplic = '';
     /**
@@ -88,7 +88,7 @@ class BaseTools
      * @var int
      */
     public $soapTimeout = 10;
-    
+
     /**
      * oCertificate
      * @var Object Class
@@ -96,12 +96,12 @@ class BaseTools
     protected $oCertificate;
     /**
      * oSoap
-     * @var Object Class  
+     * @var Object Class
      */
     protected $oSoap;
     /**
      * aDocFormat
-     * @var array 
+     * @var array
      */
     protected $aDocFormat = array();
     /**
@@ -122,17 +122,17 @@ class BaseTools
     protected $urlPortal = '';
     /**
      * urlcUF
-     * @var string 
+     * @var string
      */
     protected $urlcUF = '';
     /**
      * urlVersion
-     * @var string 
+     * @var string
      */
     protected $urlVersion = '';
     /**
      * urlService
-     * @var string 
+     * @var string
      */
     protected $urlService = '';
     /**
@@ -142,17 +142,17 @@ class BaseTools
     protected $urlMethod = '';
     /**
      * urlOperation
-     * @var string 
+     * @var string
      */
     protected $urlOperation = '';
     /**
      * urlNamespace
-     * @var string 
+     * @var string
      */
     protected $urlNamespace = '';
     /**
      * urlHeader
-     * @var string 
+     * @var string
      */
     protected $urlHeader = '';
     /**
@@ -160,7 +160,7 @@ class BaseTools
      * @var string
      */
     protected $modelo = '55';
-    
+
     /**
      * cUFlist
      * @var array
@@ -196,7 +196,7 @@ class BaseTools
         'TO'=>'17',
         'SVAN' => '91'
     );
-    
+
     /**
      * __construct
      * @param string $configJson
@@ -208,7 +208,7 @@ class BaseTools
         if ($configJson == '') {
             $msg = 'O arquivo de configuração no formato JSON deve ser passado para a classe.';
             throw new Exception\InvalidArgumentException($msg);
-        }    
+        }
         if (is_file($configJson)) {
             $configJson = Files\FilesFolders::readFile($configJson);
         }
@@ -222,20 +222,20 @@ class BaseTools
         //carrega os certificados
         $this->oCertificate = new Pkcs12(
             $this->aConfig['pathCertsFiles'],
-            $this->aConfig['cnpj']
+            '12134405000100'//$this->aConfig['cnpj']
         );
         if ($this->oCertificate->priKey == '') {
             //tentar carregar novo certificado
             $this->atualizaCertificado(
-                $this->aConfig['pathCertsFiles'].$this->aConfig['certPfxName'],
-                $this->aConfig['certPassword']
+                $this->aConfig['pathCertsFiles'] .'certificado.pfx', //$this->aConfig['certPfxName'],
+                "medeve1$"//$this->aConfig['certPassword']
             );
             if ($this->oCertificate->expireTimestamp == 0) {
                 $msg = 'Não existe certificado válido disponível. Atualize o Certificado.';
                 throw new Exception\RuntimeException($msg);
             }
         }
-        $this->setAmbiente($this->aConfig['tpAmb']);
+        $this->setAmbiente('1');//$this->aConfig['tpAmb']);
         $this->certExpireTimestamp = $this->oCertificate->expireTimestamp;
         $this->zLoadSoapClass();
         //verifica se a contingência está ativada
@@ -251,7 +251,7 @@ class BaseTools
             }
         }
     }
-    
+
     /**
      * setSSLProtocol
      * Força o uso de um determinado protocolo de encriptação
@@ -288,7 +288,7 @@ class BaseTools
             $this->zLoadSoapClass();
         }
     }
-    
+
     /**
      * getSSLProtocol
      * Retrona o protocolo que está setado
@@ -299,7 +299,7 @@ class BaseTools
         $aPr = array('default','TLSv1','SSLv2','SSLv3','TLSv1.0','TLSv1.1','TLSv1.2');
         return $aPr[$this->sslProtocol];
     }
-    
+
     /**
      * setSoapTimeOut
      * @param integer $segundos
@@ -311,7 +311,7 @@ class BaseTools
             $this->zLoadSoapClass();
         }
     }
-    
+
     /**
      * getSoapTimeOut
      * @return integer
@@ -320,7 +320,7 @@ class BaseTools
     {
         return $this->soapTimeout;
     }
-    
+
     /**
      * setAmbiente
      * Seta a varável de ambiente
@@ -333,7 +333,7 @@ class BaseTools
             $this->ambiente = 'producao';
         }
     }
-    
+
     /**
      * atualizaCertificado
      * @param string $certpfx certificado pfx em string ou o path para o certificado
@@ -353,12 +353,12 @@ class BaseTools
         $this->zLoadSoapClass();
         return true;
     }
-    
+
     /**
      * assinaDoc
      * @param string $xml
      * @param string $tipo nfe, cte, ou mdfe
-     * @param string $tag Nome da tag a ser assinada 
+     * @param string $tag Nome da tag a ser assinada
      * @param boolean $saveFile APENAS para salvar NFe, CTe ou MDFe
      * @return string
      * @throws Exception\InvalidArgumentException
@@ -395,7 +395,7 @@ class BaseTools
         }
         return $sxml;
     }
-    
+
     /**
      * setVerAplic
      * @param string $versao
@@ -419,7 +419,7 @@ class BaseTools
             $this->sslProtocol
         );
     }
-    
+
     /**
      * zLoadServico
      * Monta o namespace e o cabecalho da comunicação SOAP
@@ -448,7 +448,7 @@ class BaseTools
         }
         $this->urlcUF = $this->zGetcUF($siglaUF);
         $pathXmlUrlFile = $this->zGetXmlUrlPath($tipo);
-        
+
         if ($this->enableSVCAN) {
             $aURL = self::zLoadSEFAZ($pathXmlUrlFile, $tpAmb, 'SVCAN');
         } elseif ($this->enableSVCRS) {
@@ -469,7 +469,7 @@ class BaseTools
         $this->urlHeader = $this->zMountHeader($tipo, $this->urlNamespace, $this->urlcUF, $this->urlVersion);
         return true;
     }
-    
+
     /**
      * zGetXmlUrlPath
      * @param string $tipo
@@ -492,16 +492,18 @@ class BaseTools
         } elseif ($tipo == 'cle') {
             $path = $this->aConfig['pathXmlUrlFileCLe'];
         }
-        
-        $pathXmlUrlFile = NFEPHP_ROOT
-            . DIRECTORY_SEPARATOR
-            . 'config'
-            . DIRECTORY_SEPARATOR
-            . $path;
-        
+
+        $pathXmlUrlFile =
+        //NFEPHP_ROOT
+          //  . DIRECTORY_SEPARATOR
+            //. 'config'
+            //. DIRECTORY_SEPARATOR
+            //.
+             $path;
+
         return $pathXmlUrlFile;
     }
-    
+
     /**
      * zMountHeader
      * @param string $tipo
@@ -534,7 +536,7 @@ class BaseTools
         }
         return $header;
     }
-    
+
     /**
      * zLoadSEFAZ
      * Extrai o URL, nome do serviço e versão dos webservices das SEFAZ de
@@ -597,7 +599,7 @@ class BaseTools
             'SVRS'=>'SVRS',
             'SVCAN'=>'SVCAN',
         );
-        
+
         $autorizadores['55'] = array(
             'AC'=>'SVRS',
             'AL'=>'SVRS',
@@ -653,7 +655,7 @@ class BaseTools
         }
         return $aUrl;
     }
-    
+
     /**
      * zExtractUrl
      * @param \SimpleXMLElement $xmlWS
@@ -678,15 +680,15 @@ class BaseTools
         }
         return $aUrl;
     }
-    
+
     /**
      * zGravaFile
      * Grava os dados no diretorio das NFe
      * @param string $tpAmb ambiente
      * @param string $filename nome do arquivo
      * @param string $data dados a serem salvos
-     * @param string $subFolder 
-     * @param string $anomes 
+     * @param string $subFolder
+     * @param string $anomes
      * @throws Exception\RuntimeException
      */
     protected function zGravaFile(
@@ -725,7 +727,7 @@ class BaseTools
     {
         return $this->cUFlist[$siglaUF];
     }
-    
+
     /**
      * zGetSigla
      * @param string $cUF

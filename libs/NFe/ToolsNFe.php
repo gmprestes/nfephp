@@ -37,7 +37,7 @@ class ToolsNFe extends BaseTools
     public $errors = array();
     /**
      * soapDebug
-     * @var string 
+     * @var string
      */
     public $soapDebug = '';
     /**
@@ -48,11 +48,11 @@ class ToolsNFe extends BaseTools
     protected $urlPortal = 'http://www.portalfiscal.inf.br/nfe';
     /**
      * aLastRetEvent
-     * @var array 
+     * @var array
      */
     private $aLastRetEvent = array();
-    
-  
+
+
     /**
      * setModelo
      *
@@ -68,7 +68,7 @@ class ToolsNFe extends BaseTools
         }
         $this->modelo = $modelo;
     }
-    
+
     /**
      * getModelo
      * Retorna o modelo de NFe atualmente setado
@@ -78,7 +78,7 @@ class ToolsNFe extends BaseTools
     {
         return $this->modelo;
     }
-    
+
     /**
      * ativaContingencia
      * Ativa a contingencia SVCAN ou SVCRS conforme a
@@ -128,7 +128,7 @@ class ToolsNFe extends BaseTools
             'TO'=>'SVCAN'
         );
         $ctg = $ctgList[$siglaUF];
-        
+
         $this->enableSVCAN = false;
         $this->enableSVCRS = false;
         $this->enableEPEC = false;
@@ -153,10 +153,10 @@ class ToolsNFe extends BaseTools
         file_put_contents(NFEPHP_ROOT.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'contingencia.json', $strJson);
         return true;
     }
-    
+
     /**
      * desativaContingencia
-     * Desliga opção de contingência 
+     * Desliga opção de contingência
      * @return boolean
      */
     public function desativaContingencia()
@@ -169,7 +169,7 @@ class ToolsNFe extends BaseTools
         unlink(NFEPHP_ROOT.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'contingencia.json');
         return true;
     }
-    
+
     /**
      * imprime
      * Imprime o documento eletrônico (NFe, CCe, Inut.)
@@ -184,11 +184,11 @@ class ToolsNFe extends BaseTools
         //PrintNFe
         return "$pathXml $pathDestino $printer";
     }
-    
+
     /**
      * enviaMail
      * Envia a NFe por email aos destinatários
-     * Caso $aMails esteja vazio serão obtidos os email do destinatário  e 
+     * Caso $aMails esteja vazio serão obtidos os email do destinatário  e
      * os emails que estiverem registrados nos campos obsCont do xml
      * @param string $pathXml
      * @param array $aMails
@@ -204,7 +204,7 @@ class ToolsNFe extends BaseTools
         }
         return $mail->envia($pathXml, $aMails, $comPdf);
     }
-    
+
     /**
      * addB2B
      * Adiciona tags de comunicação B2B, especialmente ANFAVEA
@@ -257,7 +257,7 @@ class ToolsNFe extends BaseTools
         $nfeb2bXMLString = str_replace(array("\n","\r","\s"), '', $nfeb2bXML);
         return (string) $nfeb2bXMLString;
     }
-    
+
     /**
      * addProtocolo
      * Adiciona o protocolo de autorização de uso da NFe
@@ -442,7 +442,7 @@ class ToolsNFe extends BaseTools
         }
         return (string) $procXML;
     }
-    
+
     /**
      * verificaValidade
      * Verifica a validade de uma NFe recebida
@@ -472,7 +472,7 @@ class ToolsNFe extends BaseTools
         }
         return true;
     }
-    
+
     /**
      * assina
      * Assina uma NFe
@@ -498,14 +498,14 @@ class ToolsNFe extends BaseTools
         $this->modelo = $oldmod;
         return $xmlSigned;
     }
-    
+
 /**
      * zPutQRTag
-     * Monta a URI para o QRCode e coloca a tag 
+     * Monta a URI para o QRCode e coloca a tag
      * no xml já assinado
      * @param Dom $dom
      * @return string
-     * NOTA: O Campo QRCode está habilitado para uso a partir de 
+     * NOTA: O Campo QRCode está habilitado para uso a partir de
      *       01/10/2015 homologação
      *       03/11/2015 Produção
      */
@@ -591,7 +591,7 @@ class ToolsNFe extends BaseTools
         //retorna a string com o xml assinado e com o QRCode
         return $xmlSigned;
     }
-    
+
     /**
      * sefazEnviaLote
      * Solicita a autorização de uso de Lote de NFe
@@ -681,7 +681,7 @@ class ToolsNFe extends BaseTools
         //das assinadas para a pasta das enviadas
         return (string) $retorno;
     }
-    
+
     /**
      * sefazConsultaRecibo
      * Contuta a situação de um Lote de NFe enviadas pelo recibo desse envio
@@ -748,7 +748,7 @@ class ToolsNFe extends BaseTools
         //pasta enviadas/aprovadas/anomes
         return (string) $retorno;
     }
-    
+
     /**
      * sefazConsultaChave
      * Consulta o status da NFe pela chave de 44 digitos
@@ -916,7 +916,7 @@ class ToolsNFe extends BaseTools
         }
         return (string) $retorno;
     }
-    
+
     /**
      * zAddProtMsg
      * @param string $tagproc
@@ -933,11 +933,11 @@ class ToolsNFe extends BaseTools
         $nodedoc = $doc->getNode($tagmsg, 0);
         $procver = $nodedoc->getAttribute("versao");
         $procns = $nodedoc->getAttribute("xmlns");
-        
+
         $doc1 = new Dom();
         $doc1->loadXMLString($xmlretorno);
         $nodedoc1 = $doc1->getNode($tagretorno, 0);
-        
+
         $proc = new \DOMDocument('1.0', 'utf-8');
         $proc->formatOutput = false;
         $proc->preserveWhiteSpace = false;
@@ -962,7 +962,7 @@ class ToolsNFe extends BaseTools
         $procXML = Strings::clearProt($procXML);
         return $procXML;
     }
-    
+
     /**
      * zValidParamInut
      * @param string $xJust
@@ -990,7 +990,7 @@ class ToolsNFe extends BaseTools
             throw new Exception\InvalidArgumentException($msg);
         }
     }
-    
+
     /**
      * sefazCadastro
      * Busca os dados cadastrais de um emitente de NFe
@@ -1157,7 +1157,7 @@ class ToolsNFe extends BaseTools
      */
     public function sefazDistDFe(
         $fonte = 'AN',
-        $tpAmb = '2',
+        $tpAmb = '1',
         $cnpj = '',
         $ultNSU = 0,
         $numNSU = 0,
@@ -1275,7 +1275,7 @@ class ToolsNFe extends BaseTools
         $aRetorno = $this->aLastRetEvent;
         return $retorno;
     }
-    
+
     /**
      * sefazEPP
      * Solicita pedido de prorrogação do prazo de retorno de produtos de uma
@@ -1324,7 +1324,7 @@ class ToolsNFe extends BaseTools
         $aRetorno = $this->aLastRetEvent;
         return $retorno;
     }
-    
+
     /**
      * sefazECPP
      * Solicita o cancelamento do pedido de prorrogação do prazo de retorno
@@ -1373,7 +1373,7 @@ class ToolsNFe extends BaseTools
         $aRetorno = $this->aLastRetEvent;
         return $retorno;
     }
-    
+
     /**
      * sefazEPEC
      * Solicita autorização em contingência EPEC
@@ -1504,7 +1504,7 @@ class ToolsNFe extends BaseTools
         $aRetorno = ReturnNFe::readReturnSefaz($servico, $retorno);
         return $retorno;
     }
-    
+
     /**
      * zGetInfo
      * Busca informações do XML
@@ -1541,7 +1541,7 @@ class ToolsNFe extends BaseTools
         );
         return $resp;
     }
-    
+
     /**
      * sefazCancela
      * Solicita o cancelamento da NFe
@@ -1581,7 +1581,7 @@ class ToolsNFe extends BaseTools
         $aRetorno = $this->aLastRetEvent;
         return $retorno;
     }
-    
+
     /**
      * sefazManifesta
      * Solicita o registro da manifestação de destinatário
@@ -1627,7 +1627,7 @@ class ToolsNFe extends BaseTools
         $aRetorno = $this->aLastRetEvent;
         return $retorno;
     }
-    
+
     /**
      * sefazDownload
      * Solicita o download de NFe já manifestada
@@ -1689,7 +1689,7 @@ class ToolsNFe extends BaseTools
         $aRetorno = ReturnNFe::readReturnSefaz($servico, $retorno);
         return (string) $retorno;
     }
-    
+
     /**
      * validarXml
      * Valida qualquer xml do sistema NFe com seu xsd
@@ -1723,7 +1723,7 @@ class ToolsNFe extends BaseTools
         }
         return true;
     }
-    
+
     /**
      * zSefazEvento
      * @param string $siglaUF
@@ -1837,7 +1837,7 @@ class ToolsNFe extends BaseTools
         }
         return (string) $retorno;
     }
-    
+
     /**
      * zTpEv
      * @param string $tpEvento
@@ -1905,7 +1905,7 @@ class ToolsNFe extends BaseTools
         }
         return array('alias' => $aliasEvento, 'desc' => $descEvento);
     }
-    
+
     /**
     * getTimestampCert
     * Retorna o timestamp para a data de vencimento do Certificado
@@ -1915,10 +1915,10 @@ class ToolsNFe extends BaseTools
     {
         return $this->oCertificate->expireTimestamp;
     }
-    
+
     /**
      * getImpostosIBPT
-     * Consulta o serviço do IBPT para obter os impostos ao consumidor 
+     * Consulta o serviço do IBPT para obter os impostos ao consumidor
      * conforme Lei 12.741/2012
      * @param string $ncm
      * @param string $exTarif
@@ -1951,7 +1951,7 @@ class ToolsNFe extends BaseTools
             $exTarif
         );
     }
-       
+
     /**
      * zMakeQRCode
      * Cria a chave do QR Code a ser usado na NFCe
@@ -1986,7 +1986,7 @@ class ToolsNFe extends BaseTools
         }
         $dhHex = self::zStr2Hex($dhEmi);
         $digHex = self::zStr2Hex($digVal);
-        
+
         $seq = '';
         $seq .= 'chNFe=' . $chNFe;
         $seq .= '&nVersao=' . $versao;
@@ -2008,7 +2008,7 @@ class ToolsNFe extends BaseTools
         $seq = $url.$seq;
         return $seq;
     }
-    
+
     /**
      * zStr2Hex
      * Converte string para haxadecimal ASCII
